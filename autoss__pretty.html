@@ -1,0 +1,142 @@
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
+<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+<link href="http://openlayers.org/en/v3.11.2/css/ol.css" rel="stylesheet" type="text/css" />
+<script src="http://openlayers.org/en/v3.11.2/build/ol.js"></script>
+<script src="http://neocoweb.ucsd.edu/sass/moment.min.js"></script>
+<script src="http://neocoweb.ucsd.edu/sass/moment-timezone-with-data-2010-2020.min.js"></script>
+<script src="http://sccoos.org/static/projects/sass/sass_latest.js"></script>
+<style type="text/css">#map {
+	  height: 520px;
+	}
+	.btn-compact {
+	  padding: 0px 6px;
+	}
+	
+	.popover-content {
+	  min-width: 300px;
+	}
+	.popover {
+	  max-width: 450px;
+	}
+	.dateRange {
+	  white-space: nowrap;
+	  color: #009;
+	  background-color: #DDD;
+	  padding: 0px 8px;
+	}
+	.smPadTB {
+	  padding: 5px 0px;
+	}
+</style>
+<p>Automated shore stations consist of a suite of sensors that are attached to piers at several locations along the California coast. These automated sensors measure temperature, salinity, chlorophyll, turbidity and water level at frequent intervals in the nearshore coastal ocean. This data can provide local and regional information on mixing and upwelling, land run-off, and algal blooms.</p>
+
+<div class="container" style="width:100%">
+	<div class="row" id="legend">
+		<div class="col-md-5">
+			<h3>Latest Data</h3>
+		</div>
+		
+		<div class="col-md-4">Time Legend: <span class="text-danger">older than 30 mins </span></div>
+		
+		<div class="col-md-3"><input id="onlyMainAttrs" onchange="toggleLatest()" type="checkbox" value="not needed" /><label>Auxiliary data</label></div>
+	</div>
+	
+	<div class="row" id="latest"><!-- Wells here --></div>
+	
+	<div class="row">
+	<div class="col-lg-6 col-lg-push-6"><!-- Start of Timeline -->
+		<div class="row">
+			<form id="radio_stations">
+				<div class="col-lg-10 col-md-10 col-sm-10 btn-group" data-toggle="buttons" id="staSel">
+					<label class="btn btn-primary btn-sm active" id="timeline_stearns_wharf"><input autocomplete="off" checked="checked" id="station_stearns_wharf" name="options" type="radio" value="stearns_wharf" /> Stearns Wharf </label> 
+					<label class="btn btn-primary btn-sm" id="timeline_santa_monica_pier"> <input autocomplete="off" id="station_santa_monica_pier" name="options" type="radio" value="santa_monica_pier" />Santa Monica Pier </label> 
+					<label class="btn btn-primary btn-sm" id="timeline_newport_pier"> <input autocomplete="off" id="station_newport_pier" name="options" type="radio" value="newport_pier" />Newport Pier </label> 
+					<label class="btn btn-primary btn-sm" id="timeline_scripps_pier"> <input autocomplete="off" id="station_scripps_pier" name="options" type="radio" value="scripps_pier" />Scripps Pier </label>
+				</div>
+			</form>
+			<div class="col-lg-2 col-md-2 col-sm-2 smPadTB text-right">
+				<a class="btn btn-sm btn-success" id="compare" href="./timeline/?main=multi" target="_blank">Compare</a>
+			</div>
+			<div class="col-lg-12 smPadTB text-right">
+				Attribute: 
+				<select id="attr" onchange="getData()" style="font-size:16px;">
+					<option selected="selected" value="temperature">Sea Surface Temp</option>
+					<option value="pressure">Pressure</option>
+					<option value="chlorophyll">Chlorophyll</option>
+					<option value="salinity">Salinity</option>
+					<option value="conductivity">conductivity</option>
+					<option value="sigmat">sigmat</option>
+					<option value="diagnosticVoltage">diagnostic voltage</option>
+					<option value="currentDraw">current draw</option>
+					<option value="aux1">aux1</option>
+					<option value="aux3">aux3</option>
+					<option value="aux4">aux4</option> 
+				</select>
+			</div>
+		</div>
+		
+		<div class="row">
+		<div id="container" style="height: 400px; min-width: 310px; margin:5px 0px;">
+		<h1 id="loader">Loading...</h1>
+		</div>
+		</div>
+		
+		<div class="row">
+		<div class="col-sm-7"><input checked="checked" id="onlyQC" onchange="getData()" type="checkbox" value="not needed" /><label>Quality Controlled</label></div>
+		
+		<div class="col-sm-5 text-right"><a href="http://sccoos.org" id="getCSV">Download CSV</a></div>
+		</div>
+		
+		<div class="row smPadTB"><span>Data range available for this station: </span> <span class="dateRange" id="startDateLocal">start</span> - <span class="dateRange" id="endDateLocal">end</span> 
+			&nbsp;&nbsp;<span><a href="./timeline/?main=single" id="access" target="_blank"> View More Data</a></span> <!-- <br />
+						<span>UTC: </span> <span class="label label-info" id="startDateUTC">start</span>- <span class="label label-info" id="endDateUTC">end</span> --></div>
+	</div>
+	
+	<div class="col-lg-6 col-lg-pull-6">
+		<div class="map" id="map">
+			<div id="popup"><a href="http://sccoos.org" id="getCSV">&nbsp;</a></div>
+		</div>
+	</div>
+	<!-- end of Timeline --></div>
+	
+	<div class="row">
+	<h3>Automated Shore Stations Program Profiles</h3>
+	
+	<ul>
+		<li>Stearns Wharf - 34.4107&deg; N, 119.6874&deg; W
+		<ul>
+			<li>Operated by the Marine Institute at the University of California, Santa Barbara</li>
+			<li>Current funding provided by the National Oceanic and Atmospheric Administration (NOAA)</li>
+		</ul>
+		</li>
+		<li>Santa Monica Pier - 34.0086&deg; N, 118.4986&deg; W
+		<ul>
+			<li>Operated by Institute of the Environment at the University of California, Los Angeles</li>
+			<li>Current funding provided by the National Oceanic and Atmospheric Administration (NOAA)</li>
+		</ul>
+		</li>
+		<li>Newport Pier - 33.6073&deg; N, 117.9289&deg; W
+		<ul>
+			<li>Operated by University of California, Irvine</li>
+			<li>Current funding provided by the National Oceanic and Atmospheric Administration (NOAA)</li>
+		</ul>
+		</li>
+		<li>Scripps Pier - 32.867&deg; N, 117.257&deg; W
+		<ul>
+			<li>Operated by the Coastal Observing Research and Development Center (CORDC) at Scripps Institution of Oceanography (SIO)</li>
+			<li>Current funding provided by the National Oceanic and Atmospheric Administration (NOAA)</li>
+		</ul>
+		</li>
+	</ul>
+	</div>
+</div>
+
+<h3><a href="http://sccoos.org/about/dmac/autossqc/" target="_blank">Quality Control Documentation</a></h3>
+
+<h3>Data Access is available in a number of formats and protocols</h3>
+
+<ul>
+	<li><a href="http://sccoos-obs0.ucsd.edu/thredds/SASS/catalog.html">THREDDS Data Server</a></li>
+	<li><a href="http://sccoos.org/erddap/index.html">ERDDAP Data Server</a></li>
+</ul>
