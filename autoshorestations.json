@@ -2,22 +2,24 @@
  "features": [
 	{"type": "Feature",
 	 "geometry": {"type": "Point", "coordinates": [-119.6874, 34.4107]}, 
-	 "id": "UCSB", 
-	 "properties": {"description": "<h3>Stearns Wharf:</h3>Operated by the Marine Institute at the University of California, Santa Barbara"}
+	 "id": "stearns_wharf", 
+	 "properties": {
+"name": "PROP NAME: Stearns Wharf",
+"description": "<h4>Stearns Wharf:</h4>Operated by the Marine Institute at the University of California, Santa Barbara"}
         },
 	{"type": "Feature",
 	 "geometry": {"type": "Point", "coordinates": [-118.4986, 34.0086]}, 
-	 "id": "UCLA", 
-	 "properties": {	"description": "<h3>Santa Monica Pier:</h3>Operated by Institute of the Environment at the University of California, Los Angeles"}
+	 "id": "santa_monica_pier", 
+	 "properties": {	"description": "<h4>Santa Monica Pier:</h4>Operated by Institute of the Environment at the University of California, Los Angeles"}
         },
 	{"type": "Feature",
 	 "geometry": {"type": "Point", "coordinates": [-117.9289, 33.6073]}, 
-	 "id": "UCI", 
-	 "properties": {	"description": "<h3>Newport Pier:</h3>Operated by University of California, Irvine"}
+	 "id": "newport_pier", 
+	 "properties": {	"description": "<h4>Newport Pier:</h4>Operated by University of California, Irvine"}
         },
 	{"type": "Feature",
 	 "geometry": {"type": "Point", "coordinates": [-117.257, 32.867]}, 
-	 "id": "UCSD", 
-	 "properties": {"description": "<h3>Scripps Pier:</h3>Operated by the Coastal Observing Research and Development Center (CORDC) at Scripps Institution of Oceanography (SIO)"}
+	 "id": "scripps_pier", 
+	 "properties": {"description": "<h4>Scripps Pier:</h4>Operated by the Coastal Observing Research and Development Center (CORDC) at Scripps Institution of Oceanography (SIO)"}
         }
 ]}
